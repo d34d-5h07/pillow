@@ -13,8 +13,8 @@
         # if c > 13:
         #     break
         # if discord_id is not None:
-
-        avatar = "avatar.png"
+        url = "https://assets.mulearn.org/misc/user.png"
+        avatar = BytesIO(requests.get(url).content)
         im = Image.open(avatar)
         bigsize = (im.size[0] * 3, im.size[1] * 3)
         mask = Image.new("L", bigsize, 0)
