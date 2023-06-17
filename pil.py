@@ -1,4 +1,5 @@
         from PIL import Image, ImageDraw, ImageFont
+        import requests
         from numerize import numerize
         from io import BytesIO
         background = Image.open("Dboard.png")
