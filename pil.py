@@ -1,3 +1,6 @@
+        from PIL import Image, ImageDraw, ImageFont
+        from numerize import numerize
+        from io import BytesIO
         background = Image.open("Dboard.png")
         # draw = ImageDraw.Draw(background)
         karma_color = "rgb(255, 80, 89)"
