@@ -1,5 +1,4 @@
         from PIL import Image, ImageDraw, ImageFont
-        import requests
         from numerize import numerize
         from io import BytesIO
         background = Image.open("Dboard.png")
@@ -15,8 +14,7 @@
         #     break
         # if discord_id is not None:
 
-        url = "https://assets.mulearn.org/misc/user.png"
-        avatar = BytesIO(requests.get(url).content)
+        avatar = "avatar.png"
         im = Image.open(avatar)
         bigsize = (im.size[0] * 3, im.size[1] * 3)
         mask = Image.new("L", bigsize, 0)
