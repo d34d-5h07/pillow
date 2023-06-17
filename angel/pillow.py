@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 from numerize import numerize
 from io import BytesIO
+import requests
 bg_image_path = "card.png"
 image_url = https://assets.mulearn.org/misc/user.png
 name = Aashish Vinu
@@ -8,7 +9,7 @@ institute = College of figma engineering
 i_area = Cyber security , web developing , app developing
 rank = 1
 karma = 13500
-
+avatar = BytesIO(requests.get(image_url).content)
 im = Image.open(avatar)
 if im.size[0] < 256 or im.size[1] < 256:
     im = im.resize((256, 256))
