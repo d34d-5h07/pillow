@@ -1,25 +1,28 @@
 from PIL import Image, ImageDraw, ImageFont
-from numerize import numerize
-from io import BytesIO
 import requests
+from io import BytesIO
+
 bg_image_path = "card.png"
-image_url = https://assets.mulearn.org/misc/user.png
-name = Aashish Vinu
-institute = College of figma engineering
-i_area = Cyber security , web developing , app developing
-rank = 1
-karma = 13500
+git_image_path = "git.png"
+image_url = "https://assets.mulearn.org/misc/user.png"
+name = "Aashish Vinu"
+institute = "MBCET"
+i_area = ["Cybersecurity", "web developing", "app developing", "iot", "ui-ux"]
+rank = "3"
+karma = "1"
 avatar = BytesIO(requests.get(image_url).content)
 im = Image.open(avatar)
 if im.size[0] < 256 or im.size[1] < 256:
     im = im.resize((256, 256))
 
-font_name = "PlusJakartaSans-Medium"
+font_name = "PlusJakartaSans-Medium.ttf"
+font2 = "PlusJakartaSans-Bold.ttf"
 
-karma_color = "rgb(255, 80, 89)"
-rank_color = "rgb(143, 90, 255)"
-# git_color = 'rgb(105, 105, 105)'
+name_color = "rgb(255, 255, 255)"
+karma_color = "rgb(255, 255, 255)"
+rank_color = "rgb(15, 136, 255)"
 color = "rgb(41, 142, 165)"
+ig_color = "rgb(75, 75, 75)"
 
 bigsize = (im.size[0] * 3, im.size[1] * 3)
 mask = Image.new("L", bigsize, 0)
@@ -28,62 +31,136 @@ draw.ellipse((0, 0) + bigsize, fill=255)
 mask = mask.resize(im.size, Image.LANCZOS)
 im.putalpha(mask)
 
-im = im.resize((round(im.size[0] * 0.67), round(im.size[1] * 0.67)))
+im = im.resize((round(im.size[0] * 1.0), round(im.size[1] * 1.0)))
 
 background = Image.open(bg_image_path)
 draw = ImageDraw.Draw(background)
 
+git_image = Image.open(git_image_path)
+draw_git = ImageDraw.Draw(git_image)
 
-font = ImageFont.truetype(font_name, size=35)
-draw.text((110, 250), name, fill=color, font=font)
-font = ImageFont.truetype(font_name, size=21)
 
+# Name
+font = ImageFont.truetype(font_name, size=45)
+draw.text((410, 60), name, fill=name_color, font=font)
+
+#College
+font = ImageFont.truetype(font_name, size=30)
 if len(institute) > 0:
-    institute = institute[0]
-    draw.text(
-        (110, 290),
-        institute,
-        fill=color,
-        font=font,
-    )
+    draw.text((410, 110), institute, fill=name_color, font=font )
 
 # Area of Interest
+start_position = (407, 340)
+padding = 10
+corner_radius = 4
+fill_color = ig_color  
+current_position = start_position
+y = start_position[1]  
+x = start_position[0]  
+desired_width = 900  
 
-font = ImageFont.truetype(font_name, size=25)
-y = 120
+# Calculate the maximum height of all the college name boxes
+max_height = max(font.getsize("#" + area)[1] + 2 * padding for area in i_area)
 
 for area in i_area:
     if len(area) > 20:
-        font = ImageFont.truetype(font_name, size=20)
-        # area_ = re.split(r'[`\-=~!@#$%^&*()_+\[\]{};\'\\:"|<,./<>?]', area[20:], 1)
-        draw.text(
-            (370, y), "#" + area[:19] + "\n" + area[19:], fill=color, font=font
-        )
-        y = y + 20
+        font_size = 15
+        text = area[:19] + "\n" + area[19:]
     else:
-        draw.text((370, y), "#" + area, fill=color, font=font)
-    y = y + 30
+        font_size = 15
+        text = area
+
+    
+    font = ImageFont.truetype(font_name, size=font_size)
+    text_width, text_height = font.getsize(text)
+    rectangle_width = text_width + 2 * padding
+    rectangle_height = text_height + 2 * padding
+
+    # Check if the box exceeds the desired width
+    if x + rectangle_width > desired_width:
+        x = start_position[0]
+        y += max_height - 10 # Adjust the vertical spacing between rows
+        max_height = rectangle_height  
+    else:
+        max_height = max(max_height, rectangle_height)
+
+    # Determine the position of the rectangle
+    rectangle_x = x
+    rectangle_y = y
+
+    # Draw the rectangular background
+    draw.rounded_rectangle(
+        [(rectangle_x, rectangle_y), (rectangle_x + rectangle_width, rectangle_y + rectangle_height)],
+        corner_radius,
+        fill=ig_color,  
+    )
+
+    # Calculate the coordinates to center the text
+    text_x = rectangle_x + (rectangle_width - text_width) // 2
+    text_y = rectangle_y + (rectangle_height - text_height) // 2
+
+    
+    draw.text((text_x, text_y), text, fill=name_color, font=font)
+
+    x += rectangle_width + 10
 
 # Karma
-font = ImageFont.truetype(font_name, size=32)
-draw.text((370, 72), karma, fill=karma_color, font=font)
+x = 410
+y = 160
+font = ImageFont.truetype(font2, size=50)
+
+offsets = {
+        6: (17, 29),
+        5: (33, 29),
+        4: (47, 29),
+        3: (65, 29),
+        2: (77, 29),
+        1: (85,29),
+    }
+x_offset, y_offset = offsets.get(len(karma), (0, 0))
+draw.multiline_text(
+        (x + x_offset, y + y_offset),
+        karma,
+        fill=karma_color,
+        font=font,
+        align="left",
+    )
 
 # Rank
-
-font = ImageFont.truetype(font_name, size=32)
-draw.text((568, 72), rank, fill=rank_color, font=font)
-
-# github
-
-if git is True:
-    font = ImageFont.truetype(font_name, size=24)
-    spacing = 15
-    draw.multiline_text((175, 420), text_left, fill=rank_color,
-                        font=font, spacing=spacing, align="left")
-    draw.multiline_text((440, 420), text_right, fill=rank_color,
-                        font=font, spacing=spacing, align="left")
-
-background.paste(im, (116, 62), im)
+x1 = 650
+y1 = 160
+r = str(rank)
+font = ImageFont.truetype(font2 , size=50)
+offsets = {
+        6: (27, 29),
+        5: (43, 29),
+        4: (56, 29),
+        3: (67, 29),
+        2: (85, 29),
+        1: (93,29),
+    }
+x1_offset, y1_offset = offsets.get(len(r), (0, 0))
+draw.multiline_text(
+        (x1 + x1_offset, y1 + y1_offset),
+        r,
+        fill=rank_color,
+        font=font,
+        align="left",
+    )
+     
+background.paste(im, (89, 72), im)
 out = BytesIO()
 background.save(out, format="PNG")
 background.show()
+
+# git = ["USER001", "34", "123", "12"]
+# if git:
+#     font = ImageFont.truetype(font_name, size=24)
+#     spacing = 15
+#     text_left = "User ID\nPublic Repositories\nTotal Commits\nTotal Forks"
+#     text_right = str(git[0]) + " \n" + "\n" + str(git[1]) + "\n" + str(git[2]) + "\n" + str(git[3])
+#     draw_git.multiline_text((175, 420), text_left, fill=rank_color, font=font, spacing=spacing, align="left")
+#     draw_git.multiline_text((300, 420), text_right, fill=rank_color, font=font, spacing=spacing, align="left")
+
+# git_image.paste(im, (89, 72), im)
+# git_image.show()
