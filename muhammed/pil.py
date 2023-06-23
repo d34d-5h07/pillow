@@ -53,7 +53,7 @@
         else:
             draw.multiline_text((y + 355, x + 70), name, fill=color, font=font_college, align="center")
 
-        r = numerize.numerize(1350)
+        r = numerize.numerize(13500)
         draw.multiline_text(
             (y + 310, x - 295),
             r,
@@ -61,6 +61,14 @@
             font=font_karma,
             align="left",
         )
+    rnew = numerize.numerize(1700)
+    draw.multiline_text(
+        (x + 36 * 2, y + 134 * 2),
+        rnew,
+        fill=new_karma_color,
+        font=font_mkarma,
+        align="left",
+    )
             # c = c + 1
             # y = y + 737
             # j = j + 1
