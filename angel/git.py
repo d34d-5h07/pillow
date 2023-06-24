@@ -2,7 +2,6 @@ from PIL import Image, ImageDraw, ImageFont
 import requests
 from io import BytesIO
 
-bg_image_path = "card.png"
 git_image_path = "git.png"
 image_url = "https://assets.mulearn.org/misc/user.png"
 name = "Aashish Vinu"
@@ -33,12 +32,8 @@ im.putalpha(mask)
 
 im = im.resize((round(im.size[0] * 1.0), round(im.size[1] * 1.0)))
 
-background = Image.open(bg_image_path)
+background = Image.open(git_image_path)
 draw = ImageDraw.Draw(background)
-
-git_image = Image.open(git_image_path)
-draw_git = ImageDraw.Draw(git_image)
-
 
 # Name
 font = ImageFont.truetype(font_name, size=45)
@@ -147,9 +142,28 @@ draw.multiline_text(
         font=font,
         align="left",
     )
-     
+git = ["ashishvinu08", "34", "124",  "140" ] # UserID, Public repositories, Total Commits, Followers
+if git:
+    followers_color = "rgb(151,151,151)"
+    userid_color = "rgb(155,153,255)"
+    spacing = 15
+    userid = "@" + str(git[0])
+    public_repo = str(git[1])
+    commits = str(git[2])
+    followers = str(git[3])
+    font = ImageFont.truetype(font_name, size=32)
+    draw.text((160, 520), name, fill=name_color, font=font)
+    font = ImageFont.truetype(font_name, size=28)
+    draw.text((160, 560), userid, fill=userid_color, font=font)
+    font = ImageFont.truetype(font_name, size=22)
+    draw.text((450, 627), public_repo, fill=name_color, font=font)
+    draw.text((747, 627), commits, fill=name_color, font=font)
+    font = ImageFont.truetype(font_name, size=40)
+    draw.text((610, 517), followers, fill=name_color, font=font)
+
+
+
 background.paste(im, (89, 72), im)
 out = BytesIO()
 background.save(out, format="PNG")
 background.show()
-
